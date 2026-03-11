@@ -25,7 +25,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [x] **Units/armies**: draw as symbols (dot, triangle) with color = owner, optional size = strength.
 - [x] **Routes**: draw lines between buildings or regions (trade routes, supply lines).
 - [x] **UI**: panels, resource bars, and icons as programmatic shapes/lines.
-- [ ] Optional: light animation (idle pulse, movement along routes).
+- [x] Optional: light animation (idle pulse, movement along routes).
 - [x] **Tests:** Terrain/borders unit tests; run `npm test`; manual check in browser.
 
 ### B.1 Real-world country borders (data-driven)

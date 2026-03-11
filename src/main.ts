@@ -36,6 +36,7 @@ function screenToWorld(sx: number, sy: number): [number, number] {
 
 // --- Game loop ---
 let lastTime = performance.now();
+let animTime = 0;
 
 function tick(now: number): void {
   const dt = Math.min((now - lastTime) / 1000, 0.1);
@@ -45,7 +46,8 @@ function tick(now: number): void {
   requestAnimationFrame(tick);
 }
 
-function update(_dt: number): void {
+function update(dt: number): void {
+  animTime += dt;
   // Simulation step (economy, etc.) will go here; fixed timestep can be added later.
 }
 
@@ -92,11 +94,25 @@ function render(): void {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Buildings: simple shapes by type/level
+  // Route flow: small moving dots along each segment (light animation)
+  const flowT = (animTime * 0.3) % 1;
+  for (const seg of routeSegs) {
+    const wx = seg.x1 + flowT * (seg.x2 - seg.x1);
+    const wy = seg.y1 + flowT * (seg.y2 - seg.y1);
+    const [sx, sy] = worldToScreen(wx, wy);
+    const r = Math.max(2, 4 / camera.scale);
+    ctx.fillStyle = "#7a9aba";
+    ctx.beginPath();
+    ctx.arc(sx, sy, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Buildings: simple shapes by type/level (idle pulse)
+  const pulse = 1 + 0.04 * Math.sin(animTime * 2);
   for (const b of buildings) {
     const app = getBuildingAppearance(b);
     const [cx, cy] = worldToScreen(b.x, b.y);
-    const screenSize = app.size * camera.scale;
+    const screenSize = app.size * camera.scale * pulse;
     ctx.fillStyle = app.fill;
     ctx.strokeStyle = app.stroke;
     ctx.lineWidth = Math.max(1, 2 / camera.scale);
@@ -111,11 +127,12 @@ function render(): void {
     }
   }
 
-  // Units/armies: dot or triangle, color = owner, size = strength
+  // Units/armies: dot or triangle, color = owner, size = strength (subtle pulse)
+  const unitPulse = 1 + 0.06 * Math.sin(animTime * 2.5);
   for (const u of getUnits()) {
     const app = getUnitAppearance(u);
     const [cx, cy] = worldToScreen(u.x, u.y);
-    const screenSize = Math.max(2, app.size * camera.scale);
+    const screenSize = Math.max(2, app.size * camera.scale * unitPulse);
     ctx.fillStyle = app.fill;
     ctx.strokeStyle = app.stroke;
     ctx.lineWidth = Math.max(1, 1.5 / camera.scale);
