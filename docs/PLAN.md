@@ -23,7 +23,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [x] **Borders**: draw country/region borders as lines (polygon edges or explicit border segments).
 - [x] **Buildings**: draw as simple shapes (rect/circle) with type and level affecting size/color; optional icon shapes.
 - [x] **Units/armies**: draw as symbols (dot, triangle) with color = owner, optional size = strength.
-- [ ] **Routes**: draw lines between buildings or regions (trade routes, supply lines).
+- [x] **Routes**: draw lines between buildings or regions (trade routes, supply lines).
 - [ ] **UI**: panels, resource bars, and icons as programmatic shapes/lines.
 - [ ] Optional: light animation (idle pulse, movement along routes).
 - [x] **Tests:** Terrain/borders unit tests; run `npm test`; manual check in browser.

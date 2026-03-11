@@ -5,6 +5,7 @@
 
 import { worldToScreen as worldToScreenCam, screenToWorld as screenToWorldCam, type Camera } from "./camera";
 import { getBuildings, getBuildingAppearance } from "./buildings";
+import { getRouteSegments, getRoutes } from "./routes";
 import { getUnits, getUnitAppearance } from "./units";
 import {
   getCells,
@@ -74,8 +75,24 @@ function render(): void {
   }
   ctx.stroke();
 
+  // Routes: lines between buildings (trade/supply)
+  const buildings = getBuildings();
+  const routeSegs = getRouteSegments(getRoutes(), buildings);
+  ctx.strokeStyle = "#5a7a9a";
+  ctx.lineWidth = Math.max(1, 2 / camera.scale);
+  ctx.setLineDash([8 / camera.scale, 6 / camera.scale]);
+  ctx.beginPath();
+  for (const seg of routeSegs) {
+    const [sx1, sy1] = worldToScreen(seg.x1, seg.y1);
+    const [sx2, sy2] = worldToScreen(seg.x2, seg.y2);
+    ctx.moveTo(sx1, sy1);
+    ctx.lineTo(sx2, sy2);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
   // Buildings: simple shapes by type/level
-  for (const b of getBuildings()) {
+  for (const b of buildings) {
     const app = getBuildingAppearance(b);
     const [cx, cy] = worldToScreen(b.x, b.y);
     const screenSize = app.size * camera.scale;
