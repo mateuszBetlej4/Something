@@ -38,6 +38,17 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [ ] Optional: country name or id on hover/select; keep programmatic fill colors (no textures) per country.
 - [ ] **Tests:** Load TopoJSON + projection tests; run `npm test`; manual check world map.
 
+### B.2 Procedural visual clarity (no textures)
+
+*After real-world borders: make everything look like what it is—recognizable, not abstract blobs. Cartoonish is fine; no textures or custom art (shapes/lines/color only).*
+
+- [ ] **Buildings look like buildings:** Draw each building type as a recognizable silhouette using only primitives (rects, circles, lines, simple polygons). Examples: factory = main block + chimney/smokestack; refinery = tanks (cylinders as ellipses) + pipes (lines); port = quay + crane shape; farm = barn (rect + pitched roof triangle); base = compound (walls + flagpole/tower). Size/level can scale the same silhouette; no textures.
+- [ ] **Terrain reads as terrain:** Water reads as water (e.g. horizontal wave lines, or subtle gradient + outline); lowland/highland/mountain clearly distinct (e.g. contour lines on hills, simple shading or pattern for mountains). Keep programmatic colors; add only procedural line/pattern rules so biomes are instantly readable.
+- [ ] **Units/armies readable:** Symbols that read as military vs. civilian (e.g. triangle = unit, formation shape or icon-style strokes). Color = owner; size = strength. Optional: simple directional cue (e.g. triangle point = facing).
+- [ ] **Consistent shape language and palette:** One coherent style (e.g. flat fills + single stroke weight; or outlined cartoon). Document or fix a small palette (water, land, borders, building types, UI) so the whole game feels unified.
+- [ ] **Optional depth:** Light procedural depth where it helps (e.g. building outline/shadow line, or terrain cell edge darken) without going 3D or adding textures.
+- [ ] **Tests:** No new logic required; run `npm test`; manual visual check that buildings/terrain/units read correctly.
+
 ### C. Data model & simulation
 
 - [ ] **Map model**: territories, ownership, adjacency, maybe provinces/cells.
@@ -81,7 +92,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 
 - [ ] **Map content**: at least one playable map (world or region) with starting countries and resources.
 - [ ] **Balance pass**: document target playtime and intended "balanced" feel; iterate on numbers and 1–2 mechanics if needed.
-- [ ] **Procedural polish**: consistent color palette and shape language so the no-texture look reads clearly.
+- [ ] **Procedural polish**: refine as needed; main work is in B.2 (visual clarity). Ensure palette and shape language stay consistent with UI and late-added content.
 - [ ] **Audio (optional)**: simple procedural or minimal sound (clicks, ticks, alerts).
 - [ ] **Tests:** Final test run; manual playthrough.
 
@@ -101,6 +112,11 @@ flowchart LR
     B2[Project and draw countries]
     B3[Ownership from point-in-polygon]
   end
+  subgraph phase1c [Phase 1c - Visual clarity]
+    V1[Buildings as recognizable shapes]
+    V2[Terrain reads as water/land/mountain]
+    V3[Palette and shape language]
+  end
   subgraph phase2 [Phase 2 - Simulation]
     D[Map + country model]
     E[Buildings + chains]
@@ -111,11 +127,12 @@ flowchart LR
     H[Input: place + orders]
     I[Balance + geopolitics]
   end
-  A --> B --> C --> B1 --> B2 --> B3 --> D --> E --> F --> G --> H --> I
+  A --> B --> C --> B1 --> B2 --> B3 --> V1 --> V2 --> V3 --> D --> E --> F --> G --> H --> I
 ```
 
 - **Phase 1:** Foundation (A–C) – runnable view of a procedural map.
 - **Phase 1b:** Real-world borders (B.1) – load Natural Earth data, project, draw country boundaries, assign ownership from geography.
+- **Phase 1c:** Procedural visual clarity (B.2) – buildings/terrain/units look like what they are (shapes and lines only, no textures); consistent palette and shape language.
 - **Phase 2:** Simulation (D–F) – economy and production running under the hood.
 - **Phase 3:** Game (G–I) – drawing buildings/routes, player input, then balance and country-level goals.
 
