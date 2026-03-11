@@ -7,4 +7,8 @@ export default defineConfig({
     outDir: "dist",
     target: "esnext",
   },
+  test: {
+    globals: false,
+    environment: "node",
+  },
 });

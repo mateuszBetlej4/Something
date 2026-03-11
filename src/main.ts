@@ -3,6 +3,7 @@
  * World space: 2D continuous (x, y). Screen: pixel space. Camera: pan (offset) + zoom (scale).
  */
 
+import { worldToScreen as worldToScreenCam, screenToWorld as screenToWorldCam, type Camera } from "./camera";
 import {
   getCells,
   getCellColor,
@@ -13,10 +14,7 @@ import {
 const canvas = document.getElementById("game") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
 
-// --- Coordinate system ---
-// World: arbitrary units (e.g. 1 unit = 1 cell). Origin (0,0) top-left by convention.
-// Screen: pixels. Camera transforms world → screen.
-const camera = {
+const camera: Camera = {
   x: 0,
   y: 0,
   scale: 1,
@@ -25,15 +23,11 @@ const camera = {
 };
 
 function worldToScreen(wx: number, wy: number): [number, number] {
-  const sx = (wx - camera.x) * camera.scale + canvas.width / 2;
-  const sy = (wy - camera.y) * camera.scale + canvas.height / 2;
-  return [sx, sy];
+  return worldToScreenCam(camera, canvas.width, canvas.height, wx, wy);
 }
 
 function screenToWorld(sx: number, sy: number): [number, number] {
-  const wx = (sx - canvas.width / 2) / camera.scale + camera.x;
-  const wy = (sy - canvas.height / 2) / camera.scale + camera.y;
-  return [wx, wy];
+  return screenToWorldCam(camera, canvas.width, canvas.height, sx, sy);
 }
 
 // --- Game loop ---

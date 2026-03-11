@@ -2,6 +2,8 @@
 
 Use the sections below as a **master checklist**. Tick items as you implement them; sub-items are ordered so early ones unblock later ones. See [BRAINSTORM.md](BRAINSTORM.md) for core concept.
 
+**Testing after each stage:** When you finish a stage, run **`npm test`** (this runs all tests, including previous stages), add or update unit tests for any new logic, then do a quick manual check (e.g. `npm run dev`). Before pushing, run the full suite so everything stays tested.
+
 ---
 
 ## 2. Plan package (checklist structure)
@@ -13,6 +15,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [x] Implement a minimal **game loop** (tick/update, render).
 - [x] Implement **camera/view** (pan, zoom) over a 2D play area.
 - [x] Define **coordinate system** (world vs. screen, cell/hex vs. free placement).
+- [x] **Tests:** Unit tests for coords/camera (worldToScreen, screenToWorld, round-trip); run `npm test`.
 
 ### B. Procedural rendering (no textures)
 
@@ -23,6 +26,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [ ] **Routes**: draw lines between buildings or regions (trade routes, supply lines).
 - [ ] **UI**: panels, resource bars, and icons as programmatic shapes/lines.
 - [ ] Optional: light animation (idle pulse, movement along routes).
+- [x] **Tests:** Terrain/borders unit tests; run `npm test`; manual check in browser.
 
 ### B.1 Real-world country borders (data-driven)
 
@@ -32,6 +36,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [ ] Replace or overlay current procedural borders with real country boundaries: draw country polygon outlines (and optionally fills) in world space.
 - [ ] Assign simulation ownership from geography: e.g. point-in-polygon per cell or per-region so each territory has a country id (ISO or internal) for economy/conflict.
 - [ ] Optional: country name or id on hover/select; keep programmatic fill colors (no textures) per country.
+- [ ] **Tests:** Load TopoJSON + projection tests; run `npm test`; manual check world map.
 
 ### C. Data model & simulation
 
@@ -42,6 +47,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [ ] **Resources**: list all resource types and their roles (consumed by population, by military, by buildings).
 - [ ] **Tick economy**: per-tick production, consumption, and transport (between linked buildings or regions).
 - [ ] **Stability/population analogue**: a metric that consumes goods and affects growth or military (e.g. "stability" or "living standards").
+- [ ] **Tests:** Map/country/building model tests; run `npm test`.
 
 ### D. Economy & balance
 
@@ -51,6 +57,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [ ] **Upgrades**: at least one building type upgradeable (e.g. level 1 → 2) with cost and benefit.
 - [ ] **Tech/unlocks**: building or researching X unlocks new chain or unit type; document intended balance (e.g. "no single dominant path").
 - [ ] Playtest and tune **numbers** (rates, costs, caps) for early-game pacing and mid-game trade-offs.
+- [ ] **Tests:** Economy/production chain tests; run `npm test`.
 
 ### E. Geopolitics layer (countries as players)
 
@@ -59,6 +66,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [ ] **Conflict**: simple military model (e.g. attack from region A to B, strength vs. defense, outcome modifies ownership or stability).
 - [ ] **Diplomacy (optional)**: treaties, trade agreements, or "influence" that affect trade or conflict (can be minimal v1).
 - [ ] **Events (optional)**: rare events (crisis, sanction) that modify resources or stability for balance and replayability.
+- [ ] **Tests:** Victory/conflict logic tests; run `npm test`.
 
 ### F. Player input & UX
 
@@ -67,6 +75,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [ ] **Issue orders**: e.g. send unit, upgrade building, toggle production.
 - [ ] **Information display**: tooltips or panel with current resources, production, and selected entity stats.
 - [ ] **Save/load (optional)**: serialize state to file; load and resume.
+- [ ] **Tests:** Selection/placement logic tests; run `npm test`; manual UX check.
 
 ### G. Content & polish
 
@@ -74,6 +83,7 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 - [ ] **Balance pass**: document target playtime and intended "balanced" feel; iterate on numbers and 1–2 mechanics if needed.
 - [ ] **Procedural polish**: consistent color palette and shape language so the no-texture look reads clearly.
 - [ ] **Audio (optional)**: simple procedural or minimal sound (clicks, ticks, alerts).
+- [ ] **Tests:** Final test run; manual playthrough.
 
 ---
 
