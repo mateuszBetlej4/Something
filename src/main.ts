@@ -5,6 +5,7 @@
 
 import { worldToScreen as worldToScreenCam, screenToWorld as screenToWorldCam, type Camera } from "./camera";
 import { getBuildings, getBuildingAppearance } from "./buildings";
+import { getUnits, getUnitAppearance } from "./units";
 import {
   getCells,
   getCellColor,
@@ -89,6 +90,30 @@ function render(): void {
     } else {
       ctx.fillRect(cx - screenSize, cy - screenSize, screenSize * 2, screenSize * 2);
       ctx.strokeRect(cx - screenSize, cy - screenSize, screenSize * 2, screenSize * 2);
+    }
+  }
+
+  // Units/armies: dot or triangle, color = owner, size = strength
+  for (const u of getUnits()) {
+    const app = getUnitAppearance(u);
+    const [cx, cy] = worldToScreen(u.x, u.y);
+    const screenSize = Math.max(2, app.size * camera.scale);
+    ctx.fillStyle = app.fill;
+    ctx.strokeStyle = app.stroke;
+    ctx.lineWidth = Math.max(1, 1.5 / camera.scale);
+    if (app.symbol === "dot") {
+      ctx.beginPath();
+      ctx.arc(cx, cy, screenSize, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - screenSize);
+      ctx.lineTo(cx + screenSize, cy + screenSize);
+      ctx.lineTo(cx - screenSize, cy + screenSize);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
     }
   }
 
