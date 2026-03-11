@@ -13,6 +13,7 @@ import {
   getBorderSegments,
   CELL_SIZE,
 } from "./terrain";
+import { renderUI } from "./ui";
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
@@ -142,6 +143,9 @@ function render(): void {
     ctx.arc(sx, sy, 4, 0, Math.PI * 2);
     ctx.fill();
   }
+
+  // UI overlay: panel, resource bars, icons
+  renderUI(ctx, canvas.width, canvas.height);
 }
 
 // --- Resize ---
