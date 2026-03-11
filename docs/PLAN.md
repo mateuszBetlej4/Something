@@ -86,6 +86,11 @@ flowchart LR
     B[Camera + coords]
     C[Proc terrain + borders]
   end
+  subgraph phase1b [Phase 1b - Real borders]
+    B1[Load world-atlas TopoJSON]
+    B2[Project and draw countries]
+    B3[Ownership from point-in-polygon]
+  end
   subgraph phase2 [Phase 2 - Simulation]
     D[Map + country model]
     E[Buildings + chains]
@@ -96,10 +101,11 @@ flowchart LR
     H[Input: place + orders]
     I[Balance + geopolitics]
   end
-  A --> B --> C --> D --> E --> F --> G --> H --> I
+  A --> B --> C --> B1 --> B2 --> B3 --> D --> E --> F --> G --> H --> I
 ```
 
 - **Phase 1:** Foundation (A–C) – runnable view of a procedural map.
+- **Phase 1b:** Real-world borders (B.1) – load Natural Earth data, project, draw country boundaries, assign ownership from geography.
 - **Phase 2:** Simulation (D–F) – economy and production running under the hood.
 - **Phase 3:** Game (G–I) – drawing buildings/routes, player input, then balance and country-level goals.
 
