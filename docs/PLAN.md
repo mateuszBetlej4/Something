@@ -8,11 +8,11 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 
 ### A. Foundation & tech stack
 
-- [ ] Choose stack (e.g. web: Canvas/WebGL + JS/TS; or native: e.g. Godot, Unity with minimal assets; or Rust/Go + SDL).
-- [ ] Set up project, build, and run loop.
-- [ ] Implement a minimal **game loop** (tick/update, render).
-- [ ] Implement **camera/view** (pan, zoom) over a 2D play area.
-- [ ] Define **coordinate system** (world vs. screen, cell/hex vs. free placement).
+- [x] Choose stack (e.g. web: Canvas/WebGL + JS/TS; or native: e.g. Godot, Unity with minimal assets; or Rust/Go + SDL).
+- [x] Set up project, build, and run loop.
+- [x] Implement a minimal **game loop** (tick/update, render).
+- [x] Implement **camera/view** (pan, zoom) over a 2D play area.
+- [x] Define **coordinate system** (world vs. screen, cell/hex vs. free placement).
 
 ### B. Procedural rendering (no textures)
 
