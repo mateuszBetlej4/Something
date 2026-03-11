@@ -1,0 +1,106 @@
+# Geopolitics Economy Game – Development Checklist
+
+Use the sections below as a **master checklist**. Tick items as you implement them; sub-items are ordered so early ones unblock later ones. See [BRAINSTORM.md](BRAINSTORM.md) for core concept.
+
+---
+
+## 2. Plan package (checklist structure)
+
+### A. Foundation & tech stack
+
+- [ ] Choose stack (e.g. web: Canvas/WebGL + JS/TS; or native: e.g. Godot, Unity with minimal assets; or Rust/Go + SDL).
+- [ ] Set up project, build, and run loop.
+- [ ] Implement a minimal **game loop** (tick/update, render).
+- [ ] Implement **camera/view** (pan, zoom) over a 2D play area.
+- [ ] Define **coordinate system** (world vs. screen, cell/hex vs. free placement).
+
+### B. Procedural rendering (no textures)
+
+- [ ] **Terrain**: generate and draw regions (e.g. grid or hex) with colors from rules (elevation, "biome", ownership).
+- [ ] **Borders**: draw country/region borders as lines (polygon edges or explicit border segments).
+- [ ] **Buildings**: draw as simple shapes (rect/circle) with type and level affecting size/color; optional icon shapes.
+- [ ] **Units/armies**: draw as symbols (dot, triangle) with color = owner, optional size = strength.
+- [ ] **Routes**: draw lines between buildings or regions (trade routes, supply lines).
+- [ ] **UI**: panels, resource bars, and icons as programmatic shapes/lines.
+- [ ] Optional: light animation (idle pulse, movement along routes).
+
+### C. Data model & simulation
+
+- [ ] **Map model**: territories, ownership, adjacency, maybe provinces/cells.
+- [ ] **Country/player**: identity, resource stocks, tech state, relations (optional).
+- [ ] **Buildings**: type, position, level, links (which routes), input/output slots.
+- [ ] **Production chains**: define recipes (inputs → outputs per tick) and which building types perform them.
+- [ ] **Resources**: list all resource types and their roles (consumed by population, by military, by buildings).
+- [ ] **Tick economy**: per-tick production, consumption, and transport (between linked buildings or regions).
+- [ ] **Stability/population analogue**: a metric that consumes goods and affects growth or military (e.g. "stability" or "living standards").
+
+### D. Economy & balance
+
+- [ ] Implement **2–3 full production chains** (e.g. energy, food, industry) with at least 2 steps each.
+- [ ] **Connectivity rule**: only connected buildings (or regions) exchange goods; define "connection" (roads, routes, adjacency).
+- [ ] **Upkeep**: buildings and/or units cost resources per tick.
+- [ ] **Upgrades**: at least one building type upgradeable (e.g. level 1 → 2) with cost and benefit.
+- [ ] **Tech/unlocks**: building or researching X unlocks new chain or unit type; document intended balance (e.g. "no single dominant path").
+- [ ] Playtest and tune **numbers** (rates, costs, caps) for early-game pacing and mid-game trade-offs.
+
+### E. Geopolitics layer (countries as players)
+
+- [ ] **Country selection/setup**: choose or assign countries at game start; map reflects initial ownership.
+- [ ] **Victory/objectives**: define at least one victory type (e.g. control X territories, reach Y GDP, scenario goal).
+- [ ] **Conflict**: simple military model (e.g. attack from region A to B, strength vs. defense, outcome modifies ownership or stability).
+- [ ] **Diplomacy (optional)**: treaties, trade agreements, or "influence" that affect trade or conflict (can be minimal v1).
+- [ ] **Events (optional)**: rare events (crisis, sanction) that modify resources or stability for balance and replayability.
+
+### F. Player input & UX
+
+- [ ] **Selection**: click to select region, building, or unit; show state in UI.
+- [ ] **Place building**: choose type, place on valid tile; deduct cost and apply connectivity.
+- [ ] **Issue orders**: e.g. send unit, upgrade building, toggle production.
+- [ ] **Information display**: tooltips or panel with current resources, production, and selected entity stats.
+- [ ] **Save/load (optional)**: serialize state to file; load and resume.
+
+### G. Content & polish
+
+- [ ] **Map content**: at least one playable map (world or region) with starting countries and resources.
+- [ ] **Balance pass**: document target playtime and intended "balanced" feel; iterate on numbers and 1–2 mechanics if needed.
+- [ ] **Procedural polish**: consistent color palette and shape language so the no-texture look reads clearly.
+- [ ] **Audio (optional)**: simple procedural or minimal sound (clicks, ticks, alerts).
+
+---
+
+## 3. Suggested implementation order
+
+```mermaid
+flowchart LR
+  subgraph phase1 [Phase 1 - Foundation]
+    A[Tech stack + loop]
+    B[Camera + coords]
+    C[Proc terrain + borders]
+  end
+  subgraph phase2 [Phase 2 - Simulation]
+    D[Map + country model]
+    E[Buildings + chains]
+    F[Tick economy]
+  end
+  subgraph phase3 [Phase 3 - Game]
+    G[Buildings + routes draw]
+    H[Input: place + orders]
+    I[Balance + geopolitics]
+  end
+  A --> B --> C --> D --> E --> F --> G --> H --> I
+```
+
+- **Phase 1:** Foundation (A–C) – runnable view of a procedural map.
+- **Phase 2:** Simulation (D–F) – economy and production running under the hood.
+- **Phase 3:** Game (G–I) – drawing buildings/routes, player input, then balance and country-level goals.
+
+---
+
+## 4. Deliverable: your checklist package
+
+This repo now contains:
+
+1. **docs/PLAN.md** (this file) – sections 2 and 3 with `- [ ]` checkboxes; tick in any editor or via script.
+2. **docs/BRAINSTORM.md** – core concept (section 1) for reference; linked from this file.
+
+Optional next step: break the checklist into per-phase files (e.g. `docs/phase1_checklist.md`, `docs/phase2_checklist.md`, `docs/phase3_checklist.md`) if you prefer smaller, phase-scoped files.
