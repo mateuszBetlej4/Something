@@ -4,6 +4,7 @@
  */
 
 import { worldToScreen as worldToScreenCam, screenToWorld as screenToWorldCam, type Camera } from "./camera";
+import { getBuildings, getBuildingAppearance } from "./buildings";
 import {
   getCells,
   getCellColor,
@@ -71,6 +72,25 @@ function render(): void {
     ctx.lineTo(b0, b1);
   }
   ctx.stroke();
+
+  // Buildings: simple shapes by type/level
+  for (const b of getBuildings()) {
+    const app = getBuildingAppearance(b);
+    const [cx, cy] = worldToScreen(b.x, b.y);
+    const screenSize = app.size * camera.scale;
+    ctx.fillStyle = app.fill;
+    ctx.strokeStyle = app.stroke;
+    ctx.lineWidth = Math.max(1, 2 / camera.scale);
+    if (app.shape === "circle") {
+      ctx.beginPath();
+      ctx.arc(cx, cy, screenSize, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      ctx.fillRect(cx - screenSize, cy - screenSize, screenSize * 2, screenSize * 2);
+      ctx.strokeRect(cx - screenSize, cy - screenSize, screenSize * 2, screenSize * 2);
+    }
+  }
 
   // Origin marker (optional)
   const [sx, sy] = worldToScreen(0, 0);
