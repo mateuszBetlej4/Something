@@ -3,6 +3,13 @@
  * World space: 2D continuous (x, y). Screen: pixel space. Camera: pan (offset) + zoom (scale).
  */
 
+import {
+  getCells,
+  getCellColor,
+  getBorderSegments,
+  CELL_SIZE,
+} from "./terrain";
+
 const canvas = document.getElementById("game") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
 
@@ -48,39 +55,37 @@ function render(): void {
   ctx.fillStyle = "#1a1a2e";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Draw a simple grid in world space to show camera/coords work
-  const [cx, cy] = screenToWorld(canvas.width / 2, canvas.height / 2);
-  const cell = 100;
-  const left = Math.floor((cx - 500) / cell) * cell;
-  const top = Math.floor((cy - 500) / cell) * cell;
-  const right = left + 1000;
-  const bottom = top + 1000;
+  const cells = getCells();
 
-  ctx.strokeStyle = "#2a2a4e";
-  ctx.lineWidth = 1 / camera.scale;
-  for (let x = left; x <= right; x += cell) {
-    const [sx0, sy0] = worldToScreen(x, top);
-    const [sx1, sy1] = worldToScreen(x, bottom);
-    ctx.beginPath();
-    ctx.moveTo(sx0, sy0);
-    ctx.lineTo(sx1, sy1);
-    ctx.stroke();
-  }
-  for (let y = top; y <= bottom; y += cell) {
-    const [sx0, sy0] = worldToScreen(left, y);
-    const [sx1, sy1] = worldToScreen(right, y);
-    ctx.beginPath();
-    ctx.moveTo(sx0, sy0);
-    ctx.lineTo(sx1, sy1);
-    ctx.stroke();
+  // Terrain: fill each cell by color (elevation + ownership)
+  for (const cell of cells) {
+    const [sx, sy] = worldToScreen(cell.wx - CELL_SIZE / 2, cell.wy - CELL_SIZE / 2);
+    const [sx2, sy2] = worldToScreen(cell.wx + CELL_SIZE / 2, cell.wy + CELL_SIZE / 2);
+    ctx.fillStyle = getCellColor(cell);
+    ctx.fillRect(sx, sy, sx2 - sx, sy2 - sy);
   }
 
-  // Origin marker
-  const [sx, sy] = worldToScreen(0, 0);
-  ctx.fillStyle = "#6a6a8e";
+  // Borders: lines between different owners
+  const segs = getBorderSegments();
+  ctx.strokeStyle = "#e8e8e8";
+  ctx.lineWidth = Math.max(1, 2 / camera.scale);
   ctx.beginPath();
-  ctx.arc(sx, sy, 4, 0, Math.PI * 2);
-  ctx.fill();
+  for (const s of segs) {
+    const [a0, a1] = worldToScreen(s.x1, s.y1);
+    const [b0, b1] = worldToScreen(s.x2, s.y2);
+    ctx.moveTo(a0, a1);
+    ctx.lineTo(b0, b1);
+  }
+  ctx.stroke();
+
+  // Origin marker (optional)
+  const [sx, sy] = worldToScreen(0, 0);
+  if (sx >= -20 && sx <= canvas.width + 20 && sy >= -20 && sy <= canvas.height + 20) {
+    ctx.fillStyle = "#8a8aae";
+    ctx.beginPath();
+    ctx.arc(sx, sy, 4, 0, Math.PI * 2);
+    ctx.fill();
+  }
 }
 
 // --- Resize ---

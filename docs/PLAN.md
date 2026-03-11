@@ -16,13 +16,22 @@ Use the sections below as a **master checklist**. Tick items as you implement th
 
 ### B. Procedural rendering (no textures)
 
-- [ ] **Terrain**: generate and draw regions (e.g. grid or hex) with colors from rules (elevation, "biome", ownership).
-- [ ] **Borders**: draw country/region borders as lines (polygon edges or explicit border segments).
+- [x] **Terrain**: generate and draw regions (e.g. grid or hex) with colors from rules (elevation, "biome", ownership).
+- [x] **Borders**: draw country/region borders as lines (polygon edges or explicit border segments).
 - [ ] **Buildings**: draw as simple shapes (rect/circle) with type and level affecting size/color; optional icon shapes.
 - [ ] **Units/armies**: draw as symbols (dot, triangle) with color = owner, optional size = strength.
 - [ ] **Routes**: draw lines between buildings or regions (trade routes, supply lines).
 - [ ] **UI**: panels, resource bars, and icons as programmatic shapes/lines.
 - [ ] Optional: light animation (idle pulse, movement along routes).
+
+### B.1 Real-world country borders (data-driven)
+
+- [ ] Add dependency: `world-atlas` (and optionally `topojson-client`) or load TopoJSON from CDN.
+- [ ] Load Natural Earth country data (e.g. `countries-110m.json` or `countries-50m.json`); decode TopoJSON to GeoJSON (lon/lat polygons).
+- [ ] Define world map extent and projection (equirectangular or Mercator): map (lon, lat) to world (x, y) and optionally clamp to visible map bounds.
+- [ ] Replace or overlay current procedural borders with real country boundaries: draw country polygon outlines (and optionally fills) in world space.
+- [ ] Assign simulation ownership from geography: e.g. point-in-polygon per cell or per-region so each territory has a country id (ISO or internal) for economy/conflict.
+- [ ] Optional: country name or id on hover/select; keep programmatic fill colors (no textures) per country.
 
 ### C. Data model & simulation
 
